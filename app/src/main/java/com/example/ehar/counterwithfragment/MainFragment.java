@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -49,12 +50,14 @@ public class MainFragment extends Fragment {
         this.c = new Counter(0);
         this.t = new Timer();
         this.h = new Handler();
-
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(
+        LayoutInflater inflater,
+        ViewGroup container,    // parent
+        Bundle savedInstanceState
+    ) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_main, container, false);
 
@@ -80,6 +83,11 @@ public class MainFragment extends Fragment {
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
     }
@@ -87,6 +95,24 @@ public class MainFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
+        this.t.cancel();
+        this.h.removeCallbacksAndMessages(null);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
     }
 
     @Override
@@ -119,6 +145,9 @@ public class MainFragment extends Fragment {
                 public void run() {
                     MainFragment.this.count.setText(Long.toString(count));
                     count++;
+                    if (count % 5 == 0) {
+                        Toast.makeText(getContext(), "Running: " + count, Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
         }
